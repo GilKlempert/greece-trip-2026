@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1B6B3A">
+<title>כשרות ביוון 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Suez+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1B6B3A; --green-d:#135029; --green-l:#EBF5EE;
+  --sea:#0D3B58; --sun:#E8B44A;
+  --red:#C0392B; --red-l:#FDEDEC;
+  --amber:#D4810A; --amber-l:#FEF5E4;
+  --blue:#1565C0; --blue-l:#E3F0FF;
+  --card:#FFFFFF; --bg:#F6F4EF;
+  --line:#E2DDD5; --muted:#6C7A85; --ink:#22333F;
+  --r:13px; --shadow:0 2px 10px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Heebo',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;
+  padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+
+/* ── Header ── */
+header{
+  background:linear-gradient(150deg,var(--green),var(--green-d));
+  color:#fff;padding:14px 16px 12px;
+  position:sticky;top:0;z-index:40;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);
+}
+.h-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.h-title{font-family:'Suez One',serif;font-size:1.25rem;line-height:1.15}
+.h-title small{display:block;font-family:'Heebo';font-size:.68rem;font-weight:300;opacity:.8;letter-spacing:.1em}
+.h-back{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;border-radius:9px;padding:5px 12px;font-family:inherit;font-size:.82rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+
+/* ── Search bar ── */
+.search-wrap{padding:12px 16px 0;position:sticky;top:68px;z-index:30;background:var(--bg)}
+.search-row{display:flex;gap:8px;align-items:center}
+.search-input{
+  flex:1;background:#fff;border:1.5px solid var(--line);border-radius:12px;
+  padding:10px 14px;font-family:inherit;font-size:1rem;color:var(--ink);
+  outline:none;transition:border-color .2s;
+}
+.search-input:focus{border-color:var(--green)}
+.search-input::placeholder{color:var(--muted)}
+.btn-cart{
+  background:var(--green);color:#fff;border:none;border-radius:12px;
+  width:44px;height:44px;font-size:1.3rem;cursor:pointer;flex:none;
+  display:grid;place-items:center;position:relative;
+}
+.cart-badge{
+  position:absolute;top:-4px;left:-4px;background:var(--sun);color:var(--ink);
+  border-radius:99px;min-width:18px;height:18px;font-size:.65rem;font-weight:700;
+  display:grid;place-items:center;padding:0 3px;display:none;
+}
+.cart-badge.on{display:grid}
+
+/* ── Filter chips ── */
+.filters{
+  display:flex;gap:7px;padding:10px 16px 6px;overflow-x:auto;scrollbar-width:none;
+}
+.filters::-webkit-scrollbar{display:none}
+.fchip{
+  flex:none;background:#fff;border:1.5px solid var(--line);border-radius:99px;
+  padding:5px 13px;font-family:inherit;font-size:.78rem;cursor:pointer;
+  white-space:nowrap;transition:all .15s;color:var(--ink);
+}
+.fchip.on{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+.fchip.status-filter.on-cert{background:var(--blue);border-color:var(--blue)}
+.fchip.status-filter.on-allowed{background:var(--green)}
+.fchip.status-filter.on-no{background:var(--red);border-color:var(--red)}
+
+/* ── Stats bar ── */
+.stats-bar{padding:6px 16px 2px;font-size:.75rem;color:var(--muted);display:flex;align-items:center;justify-content:space-between;gap:8px}
+
+/* ── Product grid ── */
+main{padding:6px 12px 12px}
+.no-results{text-align:center;padding:48px 20px;color:var(--muted);font-size:.9rem}
+
+.product-card{
+  background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);
+  margin:8px 0;border-right:4px solid var(--green);overflow:hidden;
+  transition:transform .1s;
+}
+.product-card:active{transform:scale(.98)}
+.product-card.s-not_authorized{border-right-color:var(--red);background:#fff9f9}
+.product-card.s-needs_hashgacha{border-right-color:var(--amber);background:#fffcf5}
+.product-card.s-allowed_no_hashgacha{border-right-color:#3498DB}
+.product-card.s-approved{border-right-color:var(--green)}
+.product-card.s-checked{border-right-color:#27AE60}
+.product-card.s-certified{border-right-color:#196F3D}
+
+.pc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:11px 14px 8px}
+.pc-left{flex:1;min-width:0}
+.pc-name{font-weight:600;font-size:.95rem;line-height:1.3}
+.pc-brand{font-size:.78rem;color:var(--muted);margin-top:1px}
+.pc-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:3px;border-radius:99px;padding:2px 9px;font-size:.7rem;font-weight:600;line-height:1.4}
+.b-cat{background:#F0F0F0;color:#444}
+.b-src-chabad{background:#FFF3CD;color:#856404}
+.b-src-jca{background:#D1ECF1;color:#0C5460}
+.b-cert{background:var(--blue-l);color:var(--blue)}
+.b-status-certified{background:#D5F5E3;color:#1E8449}
+.b-status-approved{background:#D5F5E3;color:#1E8449}
+.b-status-checked{background:#D5F5E3;color:#1E8449}
+.b-status-allowed_no_hashgacha{background:#EBF5FB;color:#1A5276}
+.b-status-needs_hashgacha{background:var(--amber-l);color:var(--amber)}
+.b-status-not_authorized{background:var(--red-l);color:var(--red)}
+
+.pc-req{padding:0 14px 10px;font-size:.8rem;color:var(--muted);line-height:1.5}
+.pc-find{padding:0 14px 10px;font-size:.78rem;color:var(--green-d);display:flex;align-items:center;gap:5px}
+.pc-find::before{content:'📍';font-size:.85rem}
+
+.pc-footer{padding:0 14px 11px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.btn-add{
+  background:var(--green);color:#fff;border:none;border-radius:99px;
+  padding:5px 16px;font-family:inherit;font-size:.8rem;cursor:pointer;
+  display:flex;align-items:center;gap:5px;transition:opacity .15s;
+}
+.btn-add:hover{opacity:.88}
+.btn-add.in-cart{background:#888}
+.btn-add.in-cart::before{content:'✓ ';}
+
+/* ── Status label map ── */
+.sl-certified::before{content:'✅ מוסמך — '}
+.sl-approved::before{content:'✅ מאושר — '}
+.sl-checked::before{content:'✅ נבדק ואושר — '}
+.sl-allowed_no_hashgacha::before{content:'🔵 מותר ללא השגחה — '}
+.sl-needs_hashgacha::before{content:'⚠️ דורש השגחה — '}
+.sl-not_authorized::before{content:'🚫 לא מאושר — '}
+
+/* ── Cart drawer ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50}
+.overlay.on{display:block}
+.drawer{
+  position:fixed;bottom:0;right:0;left:0;z-index:51;
+  background:#fff;border-radius:20px 20px 0 0;
+  max-height:82vh;overflow:hidden;display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .3s ease;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.drawer.on{transform:none}
+.drawer-handle{width:36px;height:4px;background:var(--line);border-radius:99px;margin:10px auto 0}
+.drawer-head{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.drawer-head h2{font-family:'Suez One',serif;color:var(--green);font-size:1.1rem}
+.drawer-body{overflow-y:auto;flex:1;padding:10px 16px}
+.drawer-empty{text-align:center;padding:32px 16px;color:var(--muted);font-size:.9rem}
+.cart-item{
+  display:flex;align-items:center;gap:10px;padding:9px 0;
+  border-bottom:1px dashed var(--line);font-size:.88rem;
+}
+.cart-item:last-child{border-bottom:none}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-meta{font-size:.73rem;color:var(--muted)}
+.ci-del{background:none;border:none;color:var(--red);font-size:1.1rem;cursor:pointer;flex:none;padding:4px}
+.ci-by{font-size:.68rem;background:#F0F0F0;border-radius:99px;padding:1px 7px}
+.drawer-footer{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px}
+.btn-clear{flex:1;background:none;border:1.5px solid var(--line);border-radius:10px;
+  padding:9px;font-family:inherit;font-size:.85rem;cursor:pointer;color:var(--muted)}
+.btn-share{flex:2;background:var(--green);color:#fff;border:none;border-radius:10px;
+  padding:9px;font-family:inherit;font-size:.88rem;font-weight:600;cursor:pointer}
+
+/* ── Sync indicator ── */
+.sync-row{display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--muted);padding:2px 16px 6px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
+.sync-dot.ok{background:#27AE60;box-shadow:0 0 5px #27AE60}
+.sync-dot.err{background:var(--red)}
+
+/* ── Tab bar ── */
+nav.tabs{
+  position:fixed;bottom:0;right:0;left:0;z-index:40;
+  background:#fff;border-top:1px solid var(--line);
+  display:flex;padding-bottom:env(safe-area-inset-bottom);
+  box-shadow:0 -2px 10px rgba(0,0,0,.07);
+}
+.tab{flex:1;background:none;border:none;font-family:inherit;padding:7px 2px 6px;
+  cursor:pointer;color:var(--muted);font-size:.64rem;
+  display:flex;flex-direction:column;align-items:center;gap:2px}
+.tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab.on{color:var(--green);font-weight:600}
+.tab.on svg{stroke:var(--green)}
+
+/* ── Name input popup ── */
+.name-popup{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60;
+  display:none;place-items:center;padding:20px;
+}
+.name-popup.on{display:grid}
+.name-box{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:360px}
+.name-box h3{font-family:'Suez One',serif;color:var(--green);margin-bottom:8px;font-size:1.05rem}
+.name-box p{font-size:.82rem;color:var(--muted);margin-bottom:14px}
+.name-box input{width:100%;border:1.5px solid var(--line);border-radius:10px;
+  padding:10px 14px;font-family:inherit;font-size:1rem;color:var(--ink);outline:none;margin-bottom:12px}
+.name-box input:focus{border-color:var(--green)}
+.name-box .btn-ok{width:100%;background:var(--green);color:#fff;border:none;
+  border-radius:10px;padding:11px;font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer}
+
+/* ── Toast ── */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#333;color:#fff;border-radius:10px;padding:9px 18px;
+  font-size:.84rem;z-index:80;opacity:0;transition:all .3s;pointer-events:none;
+  white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-top">
+    <div class="h-title">🫒 כשרות ביוון<small>Kosher Hellas · Chabad of Greece · 349 פריטים</small></div>
+    <a href="../index.html" class="h-back">← חזרה</a>
+  </div>
+</header>
+
+<!-- Search -->
+<div class="search-wrap">
+  <div class="search-row">
+    <input class="search-input" id="searchInput" type="search" placeholder="חיפוש — שם מוצר, מותג, קטגוריה…" autocomplete="off">
+    <button class="btn-cart" id="btnCart" title="רשימת קניות">
+      🛒<span class="cart-badge" id="cartBadge">0</span>
+    </button>
+  </div>
+</div>
+
+<!-- Category filters -->
+<div class="filters" id="catFilters">
+  <button class="fchip on" data-cat="">הכל</button>
+</div>
+
+<!-- Status filters -->
+<div class="filters" id="statusFilters">
+  <button class="fchip status-filter on" data-status="">כל הסטטוסים</button>
+  <button class="fchip status-filter" data-status="certified,approved,checked">✅ מאושר/מוסמך</button>
+  <button class="fchip status-filter" data-status="allowed_no_hashgacha">🔵 ללא השגחה</button>
+  <button class="fchip status-filter" data-status="needs_hashgacha">⚠️ דורש השגחה</button>
+  <button class="fchip status-filter" data-status="not_authorized">🚫 לא מאושר</button>
+</div>
+
+<div class="sync-row"><span class="sync-dot" id="syncDot"></span><span id="syncTxt">מתחבר לרשימה המשותפת…</span></div>
+<div class="stats-bar"><span id="statsText"></span><span id="srcFilter" style="font-size:.72rem;cursor:pointer;text-decoration:underline;color:var(--green)">כל המקורות</span></div>
+
+<main id="productList"></main>
+<div class="no-results" id="noResults" style="display:none">לא נמצאו מוצרים — נסה לחפש אחרת</div>
+
+<!-- Cart drawer -->
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-head">
+    <h2>🛒 רשימת קניות</h2>
+    <span style="font-size:.75rem;color:var(--muted)" id="cartSync">…</span>
+  </div>
+  <div class="drawer-body" id="drawerBody">
+    <div class="drawer-empty" id="drawerEmpty">הרשימה ריקה — הוסף מוצרים מהחיפוש</div>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn-clear" id="btnClearDone">🧹 נקה שנקנו</button>
+    <button class="btn-share" id="btnShare">📤 שיתוף הרשימה</button>
+  </div>
+</div>
+
+<!-- Name popup -->
+<div class="name-popup" id="namePopup">
+  <div class="name-box">
+    <h3>👋 מי מוסיף?</h3>
+    <p>הרשימה משותפת לכל המשפחה — מה השם שלך?</p>
+    <input id="nameInput" type="text" placeholder="שם (למשל: מור, גיל, יפה…)" maxlength="20" autocomplete="off">
+    <button class="btn-ok" id="btnNameOk">התחל</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Tab bar -->
+<nav class="tabs">
+  <button class="tab" onclick="location.href='../index.html#today'" >
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>היום</button>
+  <button class="tab" onclick="location.href='../index.html#route'">
+    <svg viewBox="0 0 24 24"><path d="M9 20l-5-2V6l5 2 6-2 5 2v12l-5-2-6 2z"/></svg>מסלול</button>
+  <button class="tab" onclick="location.href='../index.html#info'">
+    <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.22a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>מידע</button>
+  <button class="tab on">
+    <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>כשרות</button>
+  <button class="tab" onclick="location.href='../index.html#pack'">
+    <svg viewBox="0 0 24 24"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M9 7V5a3 3 0 0 1 6 0v2M9 12l2 2 4-4"/></svg>אריזה</button>
+</nav>
+
+<script>
+// ================================================================
+// CONFIG
+// ================================================================
+const SB_URL  = 'https://ixafkpbgjptnilbncncv.supabase.co';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4YWZrcGJnanB0bmlsYm5jbmN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExODY3NTEsImV4cCI6MjA5Njc2Mjc1MX0.e3Udx_IwskWcnEK7d2PE34iG3AewSmBO7vUtF7hYXn4';
+const SB_HDR  = {'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY};
+const LS_NAME = 'kosher_username_v1';
+
+// ================================================================
+// DATA (inline — same file)
+// ================================================================
+</script>
+<script src="data.js"></script>
+<script>
+// ================================================================
+// STATE
+// ================================================================
+let query = '';
+let activeCat = '';
+let activeStatus = '';
+let activeSrc = '';        // '' | 'chabad' | 'jca'
+let cartItems = [];        // {id, product_key, name, brand, cat, added_by, done}
+let userName = localStorage.getItem(LS_NAME) || '';
+
+// ================================================================
+// STATUS HELPERS
+// ================================================================
+const STATUS_LABEL = {
+  certified:            '✅ מוסמך',
+  approved:             '✅ מאושר',
+  checked:              '✅ נבדק ואושר',
+  allowed_no_hashgacha: '🔵 ללא השגחה',
+  needs_hashgacha:      '⚠️ דורש השגחה',
+  not_authorized:       '🚫 לא מאושר'
+};
+const SRC_LABEL = { chabad:'Chabad of Greece', jca:'Kosher Hellas / JCA' };
+const esc = s => String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ================================================================
+// FILTER + RENDER PRODUCTS
+// ================================================================
+function buildCatFilters(){
+  const cats = [...new Set(KOSHER_DATA.map(p=>p.cat))].sort();
+  const c = document.getElementById('catFilters');
+  cats.forEach(cat=>{
+    const b = document.createElement('button');
+    b.className='fchip'; b.dataset.cat=cat; b.textContent=cat;
+    c.appendChild(b);
+  });
+  c.addEventListener('click', e=>{
+    const btn = e.target.closest('.fchip'); if(!btn) return;
+    activeCat = btn.dataset.cat;
+    c.querySelectorAll('.fchip').forEach(b=>b.classList.toggle('on', b.dataset.cat===activeCat));
+    renderProducts();
+  });
+}
+
+document.getElementById('statusFilters').addEventListener('click', e=>{
+  const btn = e.target.closest('.fchip'); if(!btn) return;
+  activeStatus = btn.dataset.status;
+  document.querySelectorAll('.status-filter').forEach(b=>b.classList.toggle('on', b.dataset.status===activeStatus));
+  renderProducts();
+});
+
+document.getElementById('srcFilter').addEventListener('click', ()=>{
+  activeSrc = activeSrc==='' ? 'chabad' : activeSrc==='chabad' ? 'jca' : '';
+  const label = {'':'כל המקורות', chabad:'Chabad בלבד', jca:'JCA בלבד'}[activeSrc];
+  document.getElementById('srcFilter').textContent = label;
+  renderProducts();
+});
+
+document.getElementById('searchInput').addEventListener('input', e=>{
+  query = e.target.value.trim().toLowerCase();
+  renderProducts();
+});
+
+function matchesQuery(p, q){
+  if(!q) return true;
+  return (p.name+' '+p.brand+' '+p.cat+' '+p.req+' '+p.find).toLowerCase().includes(q);
+}
+
+function filterData(){
+  return KOSHER_DATA.filter(p=>{
+    if(activeCat && p.cat!==activeCat) return false;
+    if(activeStatus){
+      const statuses = activeStatus.split(',');
+      if(!statuses.includes(p.status)) return false;
+    }
+    if(activeSrc && p.src!==activeSrc) return false;
+    if(!matchesQuery(p, query)) return false;
+    return true;
+  });
+}
+
+function isInCart(p){
+  const key = makeKey(p);
+  return cartItems.some(c=>c.product_key===key && !c.done);
+}
+function makeKey(p){ return [p.cat,p.name,p.brand].join('|') }
+
+function renderProducts(){
+  const data = filterData();
+  const list = document.getElementById('productList');
+  const none = document.getElementById('noResults');
+  document.getElementById('statsText').textContent = `${data.length} מוצרים`;
+
+  if(!data.length){ list.innerHTML=''; none.style.display=''; return; }
+  none.style.display='none';
+
+  // show max 80 unless searching
+  const show = query ? data : data.slice(0,80);
+  list.innerHTML = show.map(p=>{
+    const key = makeKey(p);
+    const inCart = isInCart(p);
+    const srcBadge = `<span class="badge b-src-${p.src}">${SRC_LABEL[p.src]}</span>`;
+    const certBadge = p.cert ? `<span class="badge b-cert">${esc(p.cert)}</span>` : '';
+    const statusBadge = `<span class="badge b-status-${p.status}">${STATUS_LABEL[p.status]||p.status}</span>`;
+    const reqHtml = p.req ? `<div class="pc-req">${esc(p.req)}</div>` : '';
+    const findHtml = p.find ? `<div class="pc-find">${esc(p.find)}</div>` : '';
+    const canAdd = p.status!=='not_authorized';
+    return `<div class="product-card s-${p.status}" data-key="${esc(key)}">
+      <div class="pc-head">
+        <div class="pc-left">
+          <div class="pc-name">${esc(p.name)}</div>
+          ${p.brand && !['הכל','מותגים שונים','מותגים שונים (Nescafé)','מותגים שונים (Tuborg)'].includes(p.brand) ? `<div class="pc-brand">${esc(p.brand)}</div>` : ''}
+          <div class="pc-badges">
+            <span class="badge b-cat">${esc(p.cat)}</span>
+            ${statusBadge}${certBadge}${srcBadge}
+          </div>
+        </div>
+      </div>
+      ${reqHtml}${findHtml}
+      ${canAdd ? `<div class="pc-footer"><button class="btn-add${inCart?' in-cart':''}" data-key="${esc(key)}">${inCart?'ברשימה':'+ הוסף לרשימה'}</button></div>` : ''}
+    </div>`;
+  }).join('');
+
+  if(!query && data.length>80){
+    list.innerHTML += `<div style="text-align:center;padding:16px;color:var(--muted);font-size:.8rem">מוצגים 80 מתוך ${data.length} — חדד את החיפוש לראות עוד</div>`;
+  }
+
+  list.querySelectorAll('.btn-add').forEach(b=>{
+    b.addEventListener('click', e=>{ e.stopPropagation(); handleAdd(b.dataset.key); });
+  });
+}
+
+// ================================================================
+// CART — Supabase backend
+// ================================================================
+async function sbFetch(path, opts={}){
+  const r = await fetch(SB_URL+'/rest/v1/'+path, {
+    headers:{...SB_HDR, Prefer:'return=representation'}, ...opts
+  });
+  if(!r.ok) throw new Error(await r.text());
+  const t = await r.text();
+  return t ? JSON.parse(t) : [];
+}
+
+async function loadCart(){
+  try{
+    const rows = await sbFetch('shopping_list?order=added_at.asc&select=*');
+    cartItems = rows;
+    updateCartBadge();
+    renderDrawer();
+    setSyncOk();
+  }catch(e){ setSyncErr(); }
+}
+
+async function addToCart(p){
+  const key = makeKey(p);
+  if(isInCart(p)){ showToast('כבר ברשימה ✓'); return; }
+  const row = {product_key:key, name:p.name, brand:p.brand||'', cat:p.cat, added_by:userName};
+  try{
+    const [created] = await sbFetch('shopping_list', {method:'POST', body:JSON.stringify(row)});
+    cartItems.push(created);
+    updateCartBadge(); renderDrawer(); renderProducts();
+    showToast('נוסף לרשימה ✓');
+    setSyncOk();
+  }catch(e){ showToast('שגיאה — נסה שוב'); setSyncErr(); }
+}
+
+async function removeFromCart(id){
+  try{
+    await sbFetch(`shopping_list?id=eq.${id}`, {method:'DELETE'});
+    cartItems = cartItems.filter(c=>c.id!==id);
+    updateCartBadge(); renderDrawer(); renderProducts();
+    setSyncOk();
+  }catch(e){ showToast('שגיאה'); setSyncErr(); }
+}
+
+async function toggleDone(id){
+  const item = cartItems.find(c=>c.id===id); if(!item) return;
+  const done = !item.done;
+  try{
+    await sbFetch(`shopping_list?id=eq.${id}`, {method:'PATCH', body:JSON.stringify({done, done_at:done?new Date().toISOString():null})});
+    item.done = done;
+    updateCartBadge(); renderDrawer(); renderProducts();
+    setSyncOk();
+  }catch(e){ setSyncErr(); }
+}
+
+async function clearDone(){
+  const doneIds = cartItems.filter(c=>c.done).map(c=>c.id);
+  if(!doneIds.length){ showToast('אין פריטים שנקנו'); return; }
+  try{
+    await sbFetch(`shopping_list?id=in.(${doneIds.join(',')})`, {method:'DELETE'});
+    cartItems = cartItems.filter(c=>!c.done);
+    updateCartBadge(); renderDrawer(); renderProducts();
+    setSyncOk();
+  }catch(e){ setSyncErr(); }
+}
+
+function updateCartBadge(){
+  const active = cartItems.filter(c=>!c.done).length;
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = active;
+  badge.classList.toggle('on', active>0);
+}
+
+function renderDrawer(){
+  const body = document.getElementById('drawerBody');
+  const empty = document.getElementById('drawerEmpty');
+  document.getElementById('cartSync').textContent = cartItems.length ? `${cartItems.filter(c=>!c.done).length} פריטים` : '';
+  if(!cartItems.length){ body.innerHTML=''; empty.style.display=''; return; }
+  empty.style.display='none';
+  const active = cartItems.filter(c=>!c.done);
+  const done   = cartItems.filter(c=>c.done);
+  const renderItem = c => `
+    <div class="cart-item" data-id="${c.id}">
+      <input type="checkbox" ${c.done?'checked':''} style="width:18px;height:18px;accent-color:var(--green);flex:none" data-done="${c.id}">
+      <div class="ci-info">
+        <div class="ci-name" style="${c.done?'text-decoration:line-through;opacity:.5':''}">${esc(c.name)}</div>
+        <div class="ci-meta">${esc(c.cat)}${c.brand?' · '+esc(c.brand):''} <span class="ci-by">${esc(c.added_by)}</span></div>
+      </div>
+      <button class="ci-del" data-del="${c.id}">✕</button>
+    </div>`;
+  body.innerHTML =
+    active.map(renderItem).join('') +
+    (done.length ? `<div style="font-size:.72rem;color:var(--muted);padding:10px 0 4px">נקנה (${done.length})</div>`+done.map(renderItem).join('') : '');
+
+  body.querySelectorAll('[data-done]').forEach(cb=>{
+    cb.addEventListener('change', ()=>toggleDone(cb.dataset.done));
+  });
+  body.querySelectorAll('[data-del]').forEach(btn=>{
+    btn.addEventListener('click', ()=>removeFromCart(btn.dataset.del));
+  });
+}
+
+function handleAdd(key){
+  if(!userName){ openNamePopup(()=>{ const p=KOSHER_DATA.find(x=>makeKey(x)===key); if(p) addToCart(p); }); return; }
+  const p = KOSHER_DATA.find(x=>makeKey(x)===key);
+  if(p) addToCart(p);
+}
+
+// ================================================================
+// CART DRAWER OPEN/CLOSE
+// ================================================================
+let cartRefreshInterval;
+function openCart(){
+  loadCart();
+  document.getElementById('overlay').classList.add('on');
+  document.getElementById('drawer').classList.add('on');
+  cartRefreshInterval = setInterval(loadCart, 10000); // poll every 10s while open
+}
+function closeCart(){
+  document.getElementById('overlay').classList.remove('on');
+  document.getElementById('drawer').classList.remove('on');
+  clearInterval(cartRefreshInterval);
+}
+document.getElementById('btnCart').addEventListener('click', openCart);
+document.getElementById('overlay').addEventListener('click', closeCart);
+document.getElementById('btnClearDone').addEventListener('click', clearDone);
+document.getElementById('btnShare').addEventListener('click', ()=>{
+  const text = ['🛒 רשימת קניות כשרות — יוון 2026', '']
+    .concat(cartItems.filter(c=>!c.done).map(c=>`☐ ${c.name}${c.brand?' ('+c.brand+')':''}  [${c.cat}]`))
+    .concat(cartItems.filter(c=>c.done).map(c=>`✓ ${c.name}`))
+    .join('\n');
+  if(navigator.share){ navigator.share({title:'רשימת קניות כשרות',text}).catch(()=>{}); }
+  else { navigator.clipboard.writeText(text).then(()=>showToast('הרשימה הועתקה ✓')); }
+});
+
+// ================================================================
+// NAME POPUP
+// ================================================================
+let onNameDone = null;
+function openNamePopup(cb){
+  onNameDone = cb;
+  document.getElementById('namePopup').classList.add('on');
+  document.getElementById('nameInput').focus();
+}
+function closeNamePopup(){
+  document.getElementById('namePopup').classList.remove('on');
+}
+document.getElementById('btnNameOk').addEventListener('click', ()=>{
+  const n = document.getElementById('nameInput').value.trim();
+  if(!n) return;
+  userName = n;
+  localStorage.setItem(LS_NAME, n);
+  closeNamePopup();
+  if(onNameDone) onNameDone();
+});
+document.getElementById('nameInput').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('btnNameOk').click(); });
+
+// ================================================================
+// SYNC STATUS
+// ================================================================
+function setSyncOk(){
+  document.getElementById('syncDot').className='sync-dot ok';
+  document.getElementById('syncTxt').textContent='רשימה משותפת — מסונכרן';
+}
+function setSyncErr(){
+  document.getElementById('syncDot').className='sync-dot err';
+  document.getElementById('syncTxt').textContent='לא מחובר לרשימה';
+}
+
+// ================================================================
+// TOAST
+// ================================================================
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// ================================================================
+// INIT
+// ================================================================
+buildCatFilters();
+renderProducts();
+loadCart();
+
+// Reload cart on page focus
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='visible') loadCart();
+});
+</script>
+</body>
+</html>
