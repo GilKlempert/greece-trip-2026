@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Suez+One&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <style>
 :root{
   --green:#1B6B3A; --green-d:#135029; --green-l:#EBF5EE;
@@ -58,6 +59,71 @@ header{
   display:grid;place-items:center;padding:0 3px;display:none;
 }
 .cart-badge.on{display:grid}
+.btn-scan{
+  background:var(--sea);color:#fff;border:none;border-radius:12px;
+  width:44px;height:44px;cursor:pointer;flex:none;
+  display:grid;place-items:center;
+}
+.btn-scan:active{opacity:.8}
+
+/* ── Scanner modal ── */
+.scan-modal{
+  position:fixed;inset:0;background:#000;z-index:70;
+  display:none;flex-direction:column;
+}
+.scan-modal.on{display:flex}
+.scan-head{
+  padding:14px 16px;padding-top:calc(14px + env(safe-area-inset-top));
+  display:flex;align-items:center;justify-content:space-between;
+  color:#fff;background:rgba(0,0,0,.6);z-index:2;
+}
+.scan-head h3{font-family:'Suez One',serif;font-size:1.05rem}
+.scan-close{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;border-radius:8px;padding:6px 14px;font-family:inherit;font-size:.9rem;cursor:pointer}
+#scanReader{flex:1;position:relative;overflow:hidden}
+#scanReader video{width:100%!important;height:100%!important;object-fit:cover!important}
+.scan-frame{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:75%;max-width:320px;aspect-ratio:1.6;
+  border:3px solid var(--sun);border-radius:14px;
+  box-shadow:0 0 0 2000px rgba(0,0,0,.45);z-index:1;pointer-events:none;
+}
+.scan-line{
+  position:absolute;top:0;left:8%;right:8%;height:2px;background:var(--sun);
+  box-shadow:0 0 8px var(--sun);animation:scanmove 2s ease-in-out infinite;
+}
+@keyframes scanmove{0%,100%{top:12%}50%{top:88%}}
+.scan-hint{
+  position:absolute;bottom:60px;left:16px;right:16px;text-align:center;
+  color:#fff;font-size:.85rem;background:rgba(0,0,0,.55);border-radius:10px;
+  padding:10px 14px;z-index:2;
+}
+.scan-manual{
+  position:absolute;bottom:16px;left:16px;right:16px;z-index:2;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;
+  border-radius:10px;padding:11px;font-family:inherit;font-size:.9rem;cursor:pointer;
+}
+.scan-status{
+  position:fixed;inset:0;z-index:71;display:none;place-items:center;
+  background:rgba(0,0,0,.75);padding:24px;
+}
+.scan-status.on{display:grid}
+.scan-status-box{
+  background:#fff;border-radius:16px;padding:24px 20px;width:100%;max-width:360px;text-align:center;
+}
+.scan-status-box .spin{
+  width:38px;height:38px;border:3px solid var(--line);border-top-color:var(--green);
+  border-radius:50%;margin:0 auto 14px;animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scan-status-box h3{font-family:'Suez One',serif;color:var(--green);margin-bottom:6px;font-size:1.1rem}
+.scan-status-box p{font-size:.88rem;color:var(--muted);line-height:1.5;margin-bottom:4px}
+.scan-status-box .prod-name{font-weight:600;color:var(--ink);font-size:1rem;margin:8px 0}
+.scan-status-box .barcode-num{font-family:monospace;font-size:.8rem;color:var(--muted);background:var(--bg);border-radius:6px;padding:3px 8px;display:inline-block;margin-top:6px}
+.scan-status-btns{display:flex;gap:8px;margin-top:16px}
+.scan-status-btns button{flex:1;border:none;border-radius:10px;padding:11px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
+.ssb-primary{background:var(--green);color:#fff}
+.ssb-secondary{background:var(--bg);color:var(--ink);border:1.5px solid var(--line)!important}
 
 /* ── Filter chips ── */
 .filters{
@@ -223,6 +289,9 @@ nav.tabs{
 <div class="search-wrap">
   <div class="search-row">
     <input class="search-input" id="searchInput" type="search" placeholder="חיפוש — שם מוצר, מותג, קטגוריה…" autocomplete="off">
+    <button class="btn-scan" id="btnScan" title="סריקת ברקוד">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+    </button>
     <button class="btn-cart" id="btnCart" title="רשימת קניות">
       🛒<span class="cart-badge" id="cartBadge">0</span>
     </button>
@@ -274,6 +343,24 @@ nav.tabs{
     <input id="nameInput" type="text" placeholder="שם (למשל: מור, גיל, יפה…)" maxlength="20" autocomplete="off">
     <button class="btn-ok" id="btnNameOk">התחל</button>
   </div>
+</div>
+
+<!-- Barcode scanner modal -->
+<div class="scan-modal" id="scanModal">
+  <div class="scan-head">
+    <h3>📷 סריקת ברקוד</h3>
+    <button class="scan-close" id="scanClose">סגור ✕</button>
+  </div>
+  <div id="scanReader">
+    <div class="scan-frame"><div class="scan-line"></div></div>
+    <div class="scan-hint">כוון את הברקוד של המוצר למסגרת</div>
+    <button class="scan-manual" id="scanManualBtn">⌨️ אין ברקוד? הקלד שם מוצר</button>
+  </div>
+</div>
+
+<!-- Scanner status dialog (lookup result) -->
+<div class="scan-status" id="scanStatus">
+  <div class="scan-status-box" id="scanStatusBox"></div>
 </div>
 
 <!-- Toast -->
@@ -1014,6 +1101,174 @@ function showToast(msg){
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.classList.remove('show'), 2200);
 }
+
+// ================================================================
+// BARCODE SCANNER
+// ================================================================
+let html5QrCode = null;
+let scanRunning = false;
+
+const scanModal   = document.getElementById('scanModal');
+const scanStatus  = document.getElementById('scanStatus');
+const scanStatusBox = document.getElementById('scanStatusBox');
+
+document.getElementById('btnScan').addEventListener('click', openScanner);
+document.getElementById('scanClose').addEventListener('click', closeScanner);
+document.getElementById('scanManualBtn').addEventListener('click', ()=>{
+  closeScanner();
+  document.getElementById('searchInput').focus();
+});
+
+async function openScanner(){
+  if(typeof Html5Qrcode === 'undefined'){
+    showToast('סורק הברקוד לא נטען — בדוק חיבור');
+    return;
+  }
+  scanModal.classList.add('on');
+  html5QrCode = new Html5Qrcode('scanReader', { verbose:false });
+  const config = {
+    fps:10,
+    qrbox:(vw,vh)=>{ const m=Math.min(vw,vh); return {width:Math.floor(m*0.72), height:Math.floor(m*0.45)}; },
+    formatsToSupport: [
+      Html5QrcodeSupportedFormats.EAN_13,
+      Html5QrcodeSupportedFormats.EAN_8,
+      Html5QrcodeSupportedFormats.UPC_A,
+      Html5QrcodeSupportedFormats.UPC_E,
+      Html5QrcodeSupportedFormats.CODE_128
+    ]
+  };
+  try{
+    await html5QrCode.start({ facingMode:'environment' }, config, onScanSuccess, ()=>{});
+    scanRunning = true;
+  }catch(e){
+    scanModal.classList.remove('on');
+    showToast('אין גישה למצלמה — אשר הרשאה בדפדפן');
+  }
+}
+
+async function closeScanner(){
+  if(html5QrCode && scanRunning){
+    try{ await html5QrCode.stop(); }catch(e){}
+    try{ html5QrCode.clear(); }catch(e){}
+  }
+  scanRunning = false;
+  html5QrCode = null;
+  scanModal.classList.remove('on');
+}
+
+let lastScanned = '';
+async function onScanSuccess(decodedText){
+  const code = decodedText.replace(/\D/g,'');
+  if(!code || code === lastScanned) return;
+  lastScanned = code;
+  await closeScanner();
+  lookupBarcode(code);
+}
+
+// ── Lookup: barcode → Open Food Facts → match in KOSHER_DATA ──
+async function lookupBarcode(code){
+  showScanStatus(`<div class="spin"></div><h3>מזהה מוצר…</h3><p>מחפש את הברקוד במאגר</p><span class="barcode-num">${esc(code)}</span>`);
+  let productName = '', brands = '';
+  try{
+    const r = await fetch(`https://world.openfoodfacts.org/api/v2/product/${code}.json?fields=product_name,product_name_en,brands`);
+    const d = await r.json();
+    if(d.status === 1 && d.product){
+      productName = d.product.product_name_en || d.product.product_name || '';
+      brands = d.product.brands || '';
+    }
+  }catch(e){ /* offline / not found — fall through */ }
+
+  if(!productName && !brands){
+    // הברקוד לא זוהה — הצע חיפוש ידני
+    showScanStatus(`
+      <h3>🔍 הברקוד לא זוהה</h3>
+      <p>המוצר לא נמצא במאגר Open Food Facts. אפשר לחפש לפי שם:</p>
+      <span class="barcode-num">${esc(code)}</span>
+      <div class="scan-status-btns">
+        <button class="ssb-secondary" onclick="hideScanStatus()">סגור</button>
+        <button class="ssb-primary" onclick="hideScanStatus();document.getElementById('searchInput').focus()">חיפוש ידני</button>
+      </div>`);
+    return;
+  }
+
+  // חיפוש התאמה במאגר הכשרות
+  const matches = findKosherMatches(productName, brands);
+  const idLine = `<div class="prod-name">${esc(productName||brands)}</div>${brands && productName ? `<p>${esc(brands)}</p>`:''}<span class="barcode-num">${esc(code)}</span>`;
+
+  if(matches.length){
+    const best = matches[0];
+    const statusColors = {
+      certified:'var(--green)', approved:'var(--green)', checked:'var(--green)',
+      allowed_no_hashgacha:'var(--blue)', needs_hashgacha:'var(--amber)', not_authorized:'var(--red)'
+    };
+    showScanStatus(`
+      <h3 style="color:${statusColors[best.status]||'var(--green)'}">${STATUS_LABEL[best.status]||best.status}</h3>
+      ${idLine}
+      <p style="margin-top:10px">נמצאו ${matches.length} התאמות אפשריות במאגר. הצגתי אותן ברשימה.</p>
+      <div class="scan-status-btns">
+        <button class="ssb-secondary" onclick="hideScanStatus()">סגור</button>
+        <button class="ssb-primary" onclick="hideScanStatus();scrollToResults()">הצג במאגר</button>
+      </div>`);
+    // הזרם את שם המוצר לחיפוש כדי להציג את ההתאמות
+    applyScanQuery(productName || brands);
+  } else {
+    showScanStatus(`
+      <h3>ℹ️ המוצר לא ברשימות הכשרות</h3>
+      ${idLine}
+      <p style="margin-top:10px">המוצר זוהה אך לא נמצא ברשימות של Chabad / JCA. אין לכך משמעות של כשרות — פשוט אינו מופיע במסמכים.</p>
+      <div class="scan-status-btns">
+        <button class="ssb-secondary" onclick="hideScanStatus()">סגור</button>
+        <button class="ssb-primary" onclick="hideScanStatus();scrollToResults()">חפש ידנית</button>
+      </div>`);
+    applyScanQuery(productName || brands);
+  }
+}
+
+// ── Fuzzy matching against the kosher database ──
+function normalizeStr(s){
+  return String(s||'').toLowerCase()
+    .replace(/[^\w\u0590-\u05FF\u0370-\u03FF\s]/g,' ')
+    .replace(/\s+/g,' ').trim();
+}
+function findKosherMatches(name, brands){
+  const nameN = normalizeStr(name);
+  const brandN = normalizeStr(brands);
+  const nameWords  = nameN.split(' ').filter(w=>w.length>2);
+  const brandWords = brandN.split(' ').filter(w=>w.length>2);
+  const scored = [];
+  KOSHER_DATA.forEach(p=>{
+    const hay = normalizeStr(p.name+' '+p.brand);
+    let score = 0;
+    // brand match is strongest signal
+    brandWords.forEach(w=>{ if(hay.includes(w)) score += 3; });
+    nameWords.forEach(w=>{ if(hay.includes(w)) score += 1; });
+    if(score > 0) scored.push({p, score});
+  });
+  scored.sort((a,b)=>b.score-a.score);
+  // require at least a brand hit or 2 name hits to avoid noise
+  return scored.filter(s=>s.score>=2).map(s=>s.p);
+}
+
+function applyScanQuery(text){
+  // בחר את המילה המזהה ביותר (מותג) לחיפוש
+  const words = normalizeStr(text).split(' ').filter(w=>w.length>2);
+  const q = words[0] || text;
+  const input = document.getElementById('searchInput');
+  input.value = q;
+  query = q.toLowerCase();
+  activeCat=''; activeStatus=''; activeSrc='';
+  document.querySelectorAll('#catFilters .fchip').forEach(b=>b.classList.toggle('on', b.dataset.cat===''));
+  document.querySelectorAll('.status-filter').forEach(b=>b.classList.toggle('on', b.dataset.status===''));
+  renderProducts();
+}
+
+function scrollToResults(){
+  document.getElementById('productList').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function showScanStatus(html){ scanStatusBox.innerHTML = html; scanStatus.classList.add('on'); }
+function hideScanStatus(){ scanStatus.classList.remove('on'); lastScanned=''; }
+scanStatus.addEventListener('click', e=>{ if(e.target===scanStatus) hideScanStatus(); });
 
 // ================================================================
 // INIT
