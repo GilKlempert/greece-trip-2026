@@ -481,9 +481,26 @@ function setSync(state, txt){
    רינדור: רצועת מסלול
 ============================================================ */
 function baseName(d){
-  let s = (d.lodging||'').replace(/לינה (ב|עצמאית)?/g,'').replace(/\(.*?\)/g,'').replace(/[-–|].*$/,'').trim();
+  let s = (d.lodging||'').split('\n')[0]; // שורה ראשונה בלבד
+  // אם יש "(המשך)" — שם המקום לבד
+  if(s.includes('המשך')){ s = s.replace(/\(.*?\)/g,'').trim(); }
+  // אם מתחיל בלועזית (שם לינה באנגלית/יוונית) — חלץ עיר מ-area
+  else if(/^[A-Za-z\u0370-\u03FF]/.test(s)){
+    const a = (d.area||'').split(/[>→]/);
+    s = (a[a.length-1]||'').replace(/שדה תעופה|SKG|ATH/g,'').trim();
+    if(!s) s = (a[0]||'').trim();
+  }
+  // ניקוי
+  s = s.replace(/לינה\s*(ב|עצמאית|–|-)?\s*/g,'')
+       .replace(/\(.*?\)/g,'')
+       .replace(/[-–|].*/,'')
+       .replace(/טלפון.*/,'')
+       .replace(/ניווט.*/,'')
+       .replace(/https?:\/\/.*/,'')
+       .trim();
   if(!s || s==='—') s = 'טיסה הביתה';
   if(s.startsWith('ב')) s = s.slice(1);
+  if(s.length > 14) s = s.split(/\s/)[0];
   return s;
 }
 function renderRoute(){
@@ -616,7 +633,7 @@ function showScreen(name){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.scr===name));
   window.scrollTo({top:0});
 }
-document.querySelectorAll('.tab').forEach(t=> t.onclick = ()=> showScreen(t.dataset.scr));
+document.querySelectorAll('.tab[data-scr]').forEach(t=> t.onclick = ()=> showScreen(t.dataset.scr));
 $('#prevDay').onclick = ()=>{ if(selIdx>0){selIdx--; renderToday();} };
 $('#nextDay').onclick = ()=>{ if(selIdx<DAYS.length-1){selIdx++; renderToday();} };
 $('#jumpToday').onclick = ()=>{ selIdx = todayIdx; renderToday(); };
