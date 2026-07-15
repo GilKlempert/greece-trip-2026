@@ -169,6 +169,7 @@ main{padding:6px 12px 12px}
 .b-cat{background:#F0F0F0;color:#444}
 .b-src-chabad{background:#FFF3CD;color:#856404}
 .b-src-jca{background:#D1ECF1;color:#0C5460}
+.b-src-kosharot{background:#E8DAF5;color:#5B2C87}
 .b-cert{background:var(--blue-l);color:var(--blue)}
 .b-status-certified{background:#D5F5E3;color:#1E8449}
 .b-status-approved{background:#D5F5E3;color:#1E8449}
@@ -280,7 +281,7 @@ nav.tabs{
 
 <header>
   <div class="h-top">
-    <div class="h-title">🫒 כשרות ביוון<small>Kosher Hellas · Chabad of Greece · 349 פריטים</small></div>
+    <div class="h-title">🫒 כשרות ביוון<small>Chabad · Kosher Hellas/JCA · כושרות · 392 פריטים</small></div>
     <a href="../index.html" class="h-back">← חזרה</a>
   </div>
 </header>
@@ -787,6 +788,56 @@ const KOSHER_DATA = [
 {cat:"מוצרי סויה", name:"Protein - Classic", brand:"SunWarrior", status:"certified", cert:"OU", req:"", src:"jca", find:"Bio Supermarket: Kampos"},
 {cat:"בשר ועופות", name:"Smoked Turkey (Deli)", brand:"Hod Lavan", status:"approved", cert:"", req:"", src:"jca", find:"AB / Sklavenitis"},
 {cat:"פירות יבשים", name:"Dried Cranberries", brand:"Ocean Spray", status:"certified", cert:"OU", req:"", src:"jca", find:"Supermarket Bazaar"},
+
+// ====================================================================
+//  כושרות — "כיצד נשמור על הכשרות בחו\"ל?" (רבני כושרות)
+//  מקור: https://www.kosharot.co.il/כשרות-בחול
+//  הרשימה עוסקת במוצרים שחששות הכשרות בהם אינם מצויים
+//  ואפשר מעיקר הדין להשתמש בהם גם ללא כשרות.
+// ====================================================================
+{cat:"שמנים", name:"שמן קנולה", brand:"Brockelmann (ברוקלמן)", status:"allowed_no_hashgacha", cert:"כושרות", req:"מומלץ ללא כשרות באופן גורף. משווק תחת מותגים שונים — יש להתבונן היטב בשם היצרן לפני כל רכישה.", src:"kosharot", find:""},
+{cat:"שמנים", name:"שמן קנולה", brand:"Scanola (סקנולה)", status:"allowed_no_hashgacha", cert:"כושרות", req:"מומלץ ללא כשרות באופן גורף. משווק תחת מותגים שונים — יש להתבונן היטב בשם היצרן לפני כל רכישה.", src:"kosharot", find:""},
+{cat:"שמנים", name:"שמן קנולה — יצרנים אחרים", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"בחלק מהמפעלים מדובר בשמן טהור, ובחלקם יש חשש לתערובות או לכשרות הכלים. רק ברוקלמן וסקנולה מומלצים ללא כשרות.", src:"kosharot", find:""},
+{cat:"שמנים", name:"שמן זית (ללא הכשר)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"רק ממותג מוכר, עם ציון 'שמן זית כתית מעולה' (Extra virgin olive oil), וללא הכיתוב 'Refined oil'. מחיר זול ממחיר השוק — חשש לזיוף.", src:"kosharot", find:""},
+{cat:"שמנים", name:"שמן שומשום בכבישה קרה", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"ללא תוספות — אינו זקוק להכשר.", src:"kosharot", find:""},
+{cat:"מצרכים", name:"מלח (ללא תוספות)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"מלח גס, דק, מלח בישול, מלח הימלאיה ורוד (Kosher salt / fine table salt) — אינו צריך כשרות.", src:"kosharot", find:""},
+{cat:"מצרכים", name:"סוכר לבן / חום / דמררה", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"אפשר לרכוש ללא כשרות. גם אבקת סוכרלוז.", src:"kosharot", find:""},
+{cat:"מצרכים", name:"קוביות סוכר וממתיקים (סטיביה, סוכרזית)", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"אין להשתמש ללא כשרות — קוביות סוכר לעיתים מרוחות בשומן מן החי.", src:"kosharot", find:""},
+{cat:"מצרכים", name:"ביצי תרנגולת", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"אינן צריכות כשרות. בביצים חומות אחוזי דם גבוהים — נדרשת תשומת לב בבדיקה.", src:"kosharot", find:""},
+{cat:"תבלינים", name:"תבלינים שלמים (לא טחונים)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"אפשר להשתמש ללא הכשר (לדוגמה: גרגירי פלפל חריף).", src:"kosharot", find:""},
+{cat:"תבלינים", name:"תבלינים טחונים", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"מעורבים חומרי טעם וריח, חומרים להגדלת נפח וחומרי עזר — אין להשתמש ללא כשרות.", src:"kosharot", find:""},
+{cat:"פירות וירקות", name:"פירות וירקות טריים (חו\"ל)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"אינם צריכים כשרות. שימו לב לציפוי דונג (הדרים, תפוחים, אגסים, אפרסקים, שזיפים, עגבניות, מלפפונים, פלפלים, בטטה) — לעיתים מופק מחרקים; רבים מהפוסקים אסרו. אפשר לקלף, או לקנות בחנויות אורגניות.", src:"kosharot", find:""},
+{cat:"פירות וירקות", name:"ירקות קפואים (ללא תוספות)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"בשלושה תנאים: (1) ללא תוספות/תבלינים ברכיבים (2) לא חומוס/שעועית/לבבות ארטישוק/תירס/פול/במיה — עוברים בישול לפני אריזה ואסורים כבישולי גויים (3) לא ירקות הדורשים פיקוח מחרקים.", src:"kosharot", find:""},
+{cat:"פירות וירקות", name:"ירקות הדורשים פיקוח מחרקים", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"אין לרכוש ללא כשרות: פטרוזיליה, תרד, כרובית, ברוקולי, פטריות, כרוב ניצנים, קלחי תירס, קייל, אספרגוס, או מיקס המכיל אחד מהם.", src:"kosharot", find:""},
+{cat:"פירות יבשים", name:"אננס מסוכר / משמש מיובש / תמרים", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"חששות הכשרות אינם מצויים — אפשר ללא הכשר. אננס: ללא חומרי צבע וטעם מיוחדים. תמרים מישראל — לוודא הפרשת תרומות ומעשרות.", src:"kosharot", find:""},
+{cat:"פירות יבשים", name:"פירות יבשים אחרים", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"רבים זקוקים לכשרות — מורחים חומרי הברקה, ולעיתים מייבשים בתנורים שאינם כשרים.", src:"kosharot", find:""},
+{cat:"אגוזים", name:"אגוזים לא קלופים", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"כל הסוגים ללא הכשר כשאינם קלופים. כנ\"ל ערמונים, קוקוס חי ושקדים בקליפתם.", src:"kosharot", find:""},
+{cat:"אגוזים", name:"שקד קלוף / אגוז מלך קלוף מאמריקה", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"היוצאים מן הכלל באגוזים קלופים — מותרים ללא כשרות.", src:"kosharot", find:""},
+{cat:"אגוזים", name:"אגוזים קלופים (אחרים)", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"מורחים עליהם לעיתים שמן שעלול להיות מן החי.", src:"kosharot", find:""},
+{cat:"אגוזים", name:"פיצוחים קלויים (גרעינים, בוטנים)", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"אין אפשרות לדעת מהי כשרות תנורי הקליה, השמן והקמח.", src:"kosharot", find:""},
+{cat:"קטניות", name:"קטניות יבשות (כללי — כושרות)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"כל הסוגים ללא כשרות, יש לבדוק מחרקים. רק יבשים ולא מעובדים — לא טחונים לאבקה/אינסטנט/שימורים. עדשים אדומות/כתומות — צריכות כשרות.", src:"kosharot", find:""},
+{cat:"דגנים", name:"קוואקר ללא תוספות", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"כשר גם כאבקה (Quick oats / instant oats). *חשש 'חדש' בין א' אלול לפסח.", src:"kosharot", find:""},
+{cat:"דגנים", name:"דגני חמשת המינים (בורגול, גריסים, גרעיני חיטה)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"חשש 'חדש' בין א' אלול לחג הפסח בשנה הבאה (Wheat, Oats, Rye, Spelt, Barley).", src:"kosharot", find:""},
+{cat:"פסטה", name:"פסטה רגילה (כללי — כושרות)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"מותר ללא כשרות כשברכיבים מופיעים קמח ומים בלבד (Flour, water), ללא טעמים וצבעים. חשש 'חדש' מא' אלול עד פסח.", src:"kosharot", find:""},
+{cat:"טחינה", name:"טחינה גולמית (כללי — כושרות)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"מותר ללא כשרות כשברכיבים שומשום בלבד (sesame seeds) ועל האריזה 'raw tahini', ללא תוספות טעמים ותבלינים.", src:"kosharot", find:""},
+{cat:"קמחים", name:"קמח תירס / תפו\"א / טפיוקה טהור", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"אפשר להשתמש ללא כשרות.", src:"kosharot", find:""},
+{cat:"קמחים", name:"קמח חיטה ומיני דגן (נקי, לא מועשר)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"מפסח עד א' אלול — ללא כשרות (יש לנפות). מא' אלול עד פסח — חשש 'חדש'.", src:"kosharot", find:""},
+{cat:"ממתיקים", name:"דבש (ללא כשרות)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"רק ממותג מוכר, מסומן 100% דבש טהור (Pure honey). מחיר זול ממחיר השוק — חשש זיוף. בחברות בוטיק ייתכנו חלקי דבורים.", src:"kosharot", find:""},
+{cat:"רטבים", name:"רסק עגבניות (כללי — כושרות)", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"ישנם מפעלים ללא חשש תערובות, אך קשה לערוך רשימה גורפת. ניתן לפנות לכושרות לבירור מוצר ספציפי.", src:"kosharot", find:""},
+{cat:"משקאות", name:"קפה (ללא תוספת טעמים)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"כל הסוגים אינם טעונים הכשר — כולל נמס, מגורען וקפסולות. עם תוספת טעמים — בהכשר בלבד.", src:"kosharot", find:""},
+{cat:"משקאות", name:"תה — עלים / שקיקים ללא תמציות", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"אינם צריכים כשרות. יש לבדוק ברכיבים ולסנן היטב מחשש חרקים.", src:"kosharot", find:""},
+{cat:"משקאות", name:"מים (ללא טעמים)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"אין צורך בהכשר. במדינות מפותחות אין חשש תולעים.", src:"kosharot", find:""},
+{cat:"משקאות קלים", name:"סודה ללא טעמים", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"מכילה רק מים ופחמן דו־חמצני (water, CO2) — לבדוק ברכיבים.", src:"kosharot", find:""},
+{cat:"משקאות קלים", name:"פפסי מקס", brand:"Pepsi", status:"allowed_no_hashgacha", cert:"כושרות", req:"פפסי מקס בלבד. *לפי כושרות, שאר המשקאות הקלים טעונים כשרות.", src:"kosharot", find:""},
+{cat:"משקאות קלים", name:"קוקה קולה (ללא כשרות)", brand:"Coca Cola", status:"needs_hashgacha", cert:"כושרות", req:"לפי כושרות: נותני הכשרות (הרב לנדא ו-OU) מעידים שבקולה ללא כשרות ישנה תערובת של חומר אסור. *שימו לב — Chabad of Greece מאשר קולה ביוון (KLBD).", src:"kosharot", find:""},
+{cat:"אלכוהול", name:"בירה ללא תוספות", brand:"היינקן / קלסברג / טובורג / קורונה", status:"allowed_no_hashgacha", cert:"כושרות", req:"רכיבים בסיסיים בלבד: Malt, water, hops, yeast, barley malt, brewer's yeast. רק ממותגים מוכרים — בבירת בוטיק מוסיפים תוספות ללא סימון. ייצור מכסלו — חשש 'חדש' עד פסח.", src:"kosharot", find:""},
+{cat:"חלב ומוצרי חלב", name:"חלב פרה (חלב נוכרי — שעת הדחק)", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"יש מהפוסקים שהקלו לתושבי חו\"ל בשעת הדחק: חלב ללא תוספות, במדינות מפותחות, מחברה ידועה. גם למקלים — רק חלב, לא מוצרי חלב (גבינות, חמאה, יוגורט).", src:"kosharot", find:""},
+{cat:"דגים", name:"דג טרי עם עור וקשקשים (זיהוי עצמאי)", brand:"", status:"allowed_no_hashgacha", cert:"כושרות", req:"דג עם קשקשים כשר בוודאות. לקנות עם עור והקשקשים ניכרים. החיתוך והטיפול לעיני הקונה היהודי. לנקות מטפילים: להסיר ראש, זימים ואיברי הבטן, לגרד ולשטוף.", src:"kosharot", find:""},
+{cat:"דגים", name:"פילה דגים מיובא מסין", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"חשש לשימוש בחומרים אסורים — יש להימנע ללא כשרות.", src:"kosharot", find:""},
+{cat:"דגים", name:"דגים עם חשש אנסיקיס", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"המקפידים יימנעו ללא כשרות המקפידה על ניקיון מאנסיקיס: אלסקה פולוק, בקלה פילה (סין/ארגנטינה), סול, סלמון (מלבד נורווגי שנקנה מחוץ לנורווגיה), פוטית/פיונית, קוד (נורווגיה ואיסלנד), רוטברש מורינוס.", src:"kosharot", find:""},
+{cat:"לחם ודגנים", name:"לחם ללא כשרות (אזהרת כושרות)", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"לחם מכיל לעיתים עשרות חומרי גלם (למשל מתחלב E471 שמופק בד\"כ משומן בע\"ח). כן רגילים למרוח על התבניות שומן שמקורו לעיתים מן החי, ובמאפייה משתמשים באותן תבניות לכל המאפים.", src:"kosharot", find:""},
+{cat:"חטיפים ושוקולד", name:"שוקולד ללא כשרות (אזהרת כושרות)", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"שוקולד מכיל עשרות רכיבים שעלולים להיות לא כשרים, וכמעט כל שוקולד מכיל רכיבי חלב (מי גבינה, לקטוז, חלבוני חלב) שרוב הפוסקים שהתירו חלב נכרי אסרו. *שימו לב — JCA מאשר מותגים ספציפיים לאוכלי חלב נוכרי.", src:"kosharot", find:""},
+{cat:"משקאות", name:"מיצים טבעיים 100% (אזהרת כושרות)", brand:"", status:"needs_hashgacha", cert:"כושרות", req:"גם במסומן 100% פרי יש חששות: אנזימים לא כשרים, הצללה, פיסטור בכלי יין, ג'לטין ותמציות. מותר רק בדוכן שסוחט מול הלקוח ללא תוספות.", src:"kosharot", find:""},
 ];
 
 </script>
@@ -812,7 +863,7 @@ const STATUS_LABEL = {
   needs_hashgacha:      '⚠️ דורש השגחה',
   not_authorized:       '🚫 לא מאושר'
 };
-const SRC_LABEL = { chabad:'Chabad of Greece', jca:'Kosher Hellas / JCA' };
+const SRC_LABEL = { chabad:'Chabad of Greece', jca:'Kosher Hellas / JCA', kosharot:'כושרות' };
 const esc = s => String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 // ================================================================
@@ -842,8 +893,8 @@ document.getElementById('statusFilters').addEventListener('click', e=>{
 });
 
 document.getElementById('srcFilter').addEventListener('click', ()=>{
-  activeSrc = activeSrc==='' ? 'chabad' : activeSrc==='chabad' ? 'jca' : '';
-  const label = {'':'כל המקורות', chabad:'Chabad בלבד', jca:'JCA בלבד'}[activeSrc];
+  activeSrc = activeSrc==='' ? 'chabad' : activeSrc==='chabad' ? 'jca' : activeSrc==='jca' ? 'kosharot' : '';
+  const label = {'':'כל המקורות', chabad:'Chabad בלבד', jca:'JCA בלבד', kosharot:'כושרות בלבד'}[activeSrc];
   document.getElementById('srcFilter').textContent = label;
   renderProducts();
 });
