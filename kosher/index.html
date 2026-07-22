@@ -121,6 +121,25 @@ header{
 .scan-status-box .prod-name{font-weight:600;color:var(--ink);font-size:1rem;margin:8px 0}
 .scan-status-box .barcode-num{font-family:monospace;font-size:.8rem;color:var(--muted);background:var(--bg);border-radius:6px;padding:3px 8px;display:inline-block;margin-top:6px}
 .scan-status-btns{display:flex;gap:8px;margin-top:16px}
+.zk-block{
+  margin-top:16px;padding:14px;border-radius:12px;
+  background:var(--bg);border:1px solid var(--line);text-align:right;
+}
+.zk-title{font-weight:700;font-size:.88rem;color:var(--sea);margin-bottom:3px}
+.zk-sub{font-size:.78rem;color:var(--muted);margin-bottom:10px;line-height:1.45}
+.zk-code-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.zk-code-row .barcode-num{flex:1;text-align:center;margin:0!important;font-size:.9rem;padding:6px 8px}
+.zk-copy{
+  background:#fff;border:1.5px solid var(--line);border-radius:8px;
+  padding:6px 12px;font-family:inherit;font-size:.78rem;cursor:pointer;flex:none;color:var(--ink);
+}
+.zk-btn{
+  display:block;text-align:center;text-decoration:none;
+  background:var(--sea);color:#fff;border-radius:10px;
+  padding:10px;font-size:.88rem;font-weight:600;margin-bottom:7px;
+}
+.zk-wa{background:#25D366}
+.zk-note{font-size:.72rem;color:var(--muted);line-height:1.45;margin-top:8px}
 .scan-status-btns button{flex:1;border:none;border-radius:10px;padding:11px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
 .ssb-primary{background:var(--green);color:#fff}
 .ssb-secondary{background:var(--bg);color:var(--ink);border:1.5px solid var(--line)!important}
@@ -1230,11 +1249,12 @@ async function lookupBarcode(code){
   }catch(e){ /* offline / not found — fall through */ }
 
   if(!productName && !brands){
-    // הברקוד לא זוהה — הצע חיפוש ידני
+    // הברקוד לא זוהה — הצע ZeKasher וחיפוש ידני
     showScanStatus(`
       <h3>🔍 הברקוד לא זוהה</h3>
-      <p>המוצר לא נמצא במאגר Open Food Facts. אפשר לחפש לפי שם:</p>
+      <p>המוצר לא נמצא במאגר Open Food Facts.</p>
       <span class="barcode-num">${esc(code)}</span>
+      ${zekasherBlock(code)}
       <div class="scan-status-btns">
         <button class="ssb-secondary" onclick="hideScanStatus()">סגור</button>
         <button class="ssb-primary" onclick="hideScanStatus();document.getElementById('searchInput').focus()">חיפוש ידני</button>
@@ -1264,15 +1284,41 @@ async function lookupBarcode(code){
     applyScanQuery(productName || brands);
   } else {
     showScanStatus(`
-      <h3>ℹ️ המוצר לא ברשימות הכשרות</h3>
+      <h3>ℹ️ המוצר לא ברשימות שלנו</h3>
       ${idLine}
-      <p style="margin-top:10px">המוצר זוהה אך לא נמצא ברשימות של Chabad / JCA. אין לכך משמעות של כשרות — פשוט אינו מופיע במסמכים.</p>
+      <p style="margin-top:10px">המוצר זוהה אך אינו מופיע ברשימות Chabad / JCA / כושרות. אין לכך משמעות של כשרות — פשוט אינו מופיע במסמכים שלנו.</p>
+      ${zekasherBlock(code)}
       <div class="scan-status-btns">
         <button class="ssb-secondary" onclick="hideScanStatus()">סגור</button>
         <button class="ssb-primary" onclick="hideScanStatus();scrollToResults()">חפש ידנית</button>
       </div>`);
     applyScanQuery(productName || brands);
   }
+}
+
+// ── בלוק מעבר ל-ZeKasher / GOK ──
+// המאגר של GOK אינו מוטמע אצלנו; זהו מעבר מהיר למערכת שלהם עם הברקוד ביד.
+function zekasherBlock(code){
+  return `
+    <div class="zk-block">
+      <div class="zk-title">בדיקה במאגר נוסף</div>
+      <p class="zk-sub">מערכת ZeKasher של GOK מכסה אלפי מוצרים ברחבי העולם, כולל יוון.</p>
+      <div class="zk-code-row">
+        <span class="barcode-num" id="zkCode">${esc(code)}</span>
+        <button class="zk-copy" onclick="copyBarcode('${esc(code)}')">📋 העתק</button>
+      </div>
+      <a class="zk-btn" href="https://kosher.global/zekasher/" target="_blank" rel="noopener">🔎 פתח את ZeKasher</a>
+      <a class="zk-btn zk-wa" href="https://chat.whatsapp.com/IaDXBIV6D2LFjPIrEaMoCW" target="_blank" rel="noopener">💬 קבוצת "יוון והאיים" של GOK</a>
+      <p class="zk-note">בקבוצה (7:00–22:00 שעון ישראל) שלחו: שם המוצר + תיאור קצר, צילום חזית/מרכיבים/ברקוד, וארץ הייצור והקנייה.</p>
+    </div>`;
+}
+
+function copyBarcode(code){
+  navigator.clipboard.writeText(code).then(()=>{
+    showToast('הברקוד הועתק ✓');
+  }).catch(()=>{
+    showToast('לא ניתן להעתיק — סמן ידנית');
+  });
 }
 
 // ── Fuzzy matching against the kosher database ──
